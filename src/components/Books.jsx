@@ -1,11 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { useLoaderData, useNavigation } from "react-router-dom";
+import Book from "./Book";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Books = () => {
-    return (
-        <div>
-           <h3>Books</h3> 
-        </div>
-    );
+    const navigation = useNavigation();
+    if (navigation.state === "loading") {
+      return <LoadingSpinner></LoadingSpinner>;
+    }
+  /*
+    *old way
+    const [ books, setBooks] = useState([]);
+    useEffect(()=> {
+        fetch('https://api.itbook.store/1.0/new')
+        .then(res => res.json())
+        .then(data => console.log(data))
+    }, []) */
+
+  /*
+   * using useLoaderData hook
+   */
+  const { books } = useLoaderData();
+  console.log(books);
+
+
+  return (
+    <div className="my-container">
+      <div className="grid gap-6 mb-8 lg:grid-cols-4 sm:grid-cols-2">
+        {books.map((book) => (
+          <Book key={book.isbn13} book={book}></Book>
+        ))}
+      </div> 
+    </div>
+  );
 };
 
 export default Books;
